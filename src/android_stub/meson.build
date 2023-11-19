@@ -1,6 +1,6 @@
 if with_android_stub
   stub_libs = []
-  lib_names = ['log', 'nativewindow', 'sync', 'cutils']
+  lib_names = ['log', 'nativewindow', 'cutils']
 
   if with_libbacktrace
     lib_names += ['backtrace']
