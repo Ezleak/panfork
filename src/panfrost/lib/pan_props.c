@@ -75,9 +75,9 @@ const struct panfrost_model panfrost_model_list[] = {
 /* clang-format on */
 
 const struct panfrost_model panfrost_unknown_model = {
-   .gpu_id = 0,
+   .gpu_id = 0x7211,
    .name = "Unknowm Mali device (Panfrost)",
-   .performance_counters = "AAAA",
+   .performance_counters = "T62x",
    .min_rev_anisotropic = NO_ANISO,
    .tilebuffer_size = 8192,
    .quirks = {},
@@ -226,6 +226,7 @@ panfrost_open_device(void *memctx, int fd, struct panfrost_device *dev)
    dev->kmod.dev = pan_kmod_dev_create(fd, PAN_KMOD_DEV_FLAG_OWNS_FD, NULL);
    if (!dev->kmod.dev) {
       close(fd);
+      unreachable("aaaaaaa");
       return;
    }
 
@@ -233,7 +234,6 @@ panfrost_open_device(void *memctx, int fd, struct panfrost_device *dev)
 
    dev->arch = pan_arch(dev->kmod.props.gpu_prod_id);
    dev->model = panfrost_get_model(dev->kmod.props.gpu_prod_id);
-
    /* If we don't recognize the model, bail early */
    if (!dev->model)
       goto err_free_kmod_dev;

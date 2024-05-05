@@ -62,6 +62,7 @@ pan_kmod_dev_create(int fd, uint32_t flags,
    if (!allocator) {
       allocator = create_default_allocator();
       if (!allocator)
+         unreachable("ac");
          goto out_free_version;
    }
 
@@ -71,6 +72,7 @@ pan_kmod_dev_create(int fd, uint32_t flags,
 
          dev = ops->dev_create(fd, flags, version, allocator);
          if (dev)
+            unreachable("ac");
             goto out_free_version;
 
          break;

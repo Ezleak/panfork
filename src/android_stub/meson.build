@@ -1,6 +1,5 @@
-if with_android_stub
   stub_libs = []
-  lib_names = ['log', 'nativewindow', 'cutils']
+  lib_names = ['nativewindow', 'cutils', 'log']
 
   if with_libbacktrace
     lib_names += ['backtrace']
@@ -14,8 +13,6 @@ if with_android_stub
       install : false,
     )
   endforeach
-
   dep_android = declare_dependency(
     link_with : stub_libs,
   )
-endif

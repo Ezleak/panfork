@@ -7,7 +7,7 @@
 #include "util/u_debug.h"
 #include "frontend/sw_winsys.h"
 #include "target-helpers/inline_debug_helper.h"
-
+#include "util/log.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -70,18 +70,14 @@ sw_screen_create_named(struct sw_winsys *winsys, const char *driver)
       screen = d3d12_create_dxcore_screen(winsys, NULL);
 #endif
 
-#if defined(GALLIUM_PANFROST)
-   if(screen == NULL && strcmp(driver, "panfrost") == 0) {
-      int kbase_device_fd = open("/dev/mali0", O_RDWR | O_CLOEXEC | O_NONBLOCK);
-      if(kbase_device_fd == -1) { 
-         printf("PAN_OSMESA: Failed to open kbase device: %s", strerror(errno));
-      }else {
-      	screen = panfrost_create_screen(kbase_device_fd, NULL, NULL);
-      }
-   }
-#else
-#error You forgot to include Panfrost
-#endif
+  int kbase_device_fd = open("/dev/mali0", O_RDWR | O_CLOEXEC | O_NONBLOCK);
+  if(kbase_device_fd == -1) { 
+      mesa_loge("PAN_OSMESA: Failed to open kbase device: %s", strerror(errno));
+      unreachable("PAN_OSMESA: Failed to open kbase device");
+  }else {
+      screen = panfrost_create_screen(kbase_device_fd, NULL, NULL);
+  }
+  screen = panfrost_create_screen(kbase_device_fd, NULL, NULL);
 
    return screen ? debug_screen_wrap(screen) : NULL;
 }

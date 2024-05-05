@@ -885,22 +885,8 @@ endif
 
 if with_platform_android
   dep_android_mapper4 = null_dep
-  if not with_android_stub
-    dep_android = [
-      dependency('cutils'),
-      dependency('hardware'),
-      dependency('sync'),
-    ]
-    if with_libbacktrace
-      dep_android += dependency('backtrace')
-    endif
-    if get_option('platform-sdk-version') >= 26
-      dep_android += dependency('nativewindow')
-    endif
-    if get_option('platform-sdk-version') >= 30
-      dep_android_mapper4 = dependency('android.hardware.graphics.mapper', version : '>= 4.0', required : false)
-    endif
-  endif
+  dep_android = null_dep 
+#cc.find_library('log')
   pre_args += [
     '-DANDROID',
     '-DANDROID_API_LEVEL=' + get_option('platform-sdk-version').to_string()
