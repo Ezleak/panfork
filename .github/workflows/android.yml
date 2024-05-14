@@ -8,7 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        arch: [ "arm32", "aarch64" ]
+        arch: [ "aarch64" ]
       fail-fast: false
 
     name: "Build for ${{matrix.arch}}"
@@ -22,7 +22,7 @@ jobs:
       - name: Build
         run: |
           sudo apt update
-          sudo apt install -y meson libxrandr-dev libxxf86vm-dev libxcb-*-dev libx11-xcb-dev libxfixes-dev libdrm-dev libx11-dev
+          sudo apt install -y llvm meson libxrandr-dev libxxf86vm-dev libxcb-*-dev libx11-xcb-dev libxfixes-dev libdrm-dev libx11-dev
           pip3 install mako
           export ANDROID_NDK_HOME="$ANDROID_SDK_ROOT/ndk-bundle"
           envsubst <android-drm-${{matrix.arch}} >build-crossfile-drm
@@ -47,7 +47,7 @@ jobs:
             --prefix=/tmp/pan \
             --cross-file "build-crossfile" \
             -Dplatforms=android \
-            -Dplatform-sdk-version=26 \
+            -Dplatform-sdk-version=33 \
             -Dandroid-stub=true \
             -Dllvm=disabled \
             -Dxlib-lease=disabled \
@@ -57,8 +57,9 @@ jobs:
             -Dopengl=true \
             -Dosmesa=true \
             -Dvulkan-drivers= \
-            -Dgallium-drivers=swrast,panfrost \
+            -Dgallium-drivers=panfrost \
             -Dshared-glapi=false
+            -Dbuildtype=release
           ninja -C "build-android" install
       - name: Upload libraries
         uses: actions/upload-artifact@v2
